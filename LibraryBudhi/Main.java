@@ -1,5 +1,4 @@
 package LibraryBudhi;
-import LibraryBudhi.Management.*;
 
 import java.util.Scanner;
 
@@ -10,7 +9,7 @@ public class Main extends Library {
     static Library library = new Library();
 
     public static void main(String[] args) {
-        initializationDatabase();
+        library.initializationDatabase();
 
         String isContinue = "y";
 
@@ -23,38 +22,54 @@ public class Main extends Library {
                 main.showBooks();
                 break;
             case 2:
-                library.showMembers();
+                main.showMembers();
                 break;
             case 3:
-                library.addMember();
+                main.addMember();
                 break;
             case 4:
-                library.addBook();
+                main.addBook();
                 break;
             case 5:
-                library.borrowBook();
+                main.borrowBook();
                 break;
             case 6:
-                library.returnBook();
+                main.returnBook();
                 break;
             case 7:
-                library.borrowedBooks();
+                main.borrowedBooks();
                 break; 
             default:
                 System.out.println("Input salah.");
                 break;
             }
 
-            System.out.printf("\nKembali ke Menu?%n[Y] [N]\n");
-            isContinue = scan.next();
-        }
+            boolean validInput = false;
 
+            while (!validInput) {
+                System.out.printf("\nBack to Menu?%n[Y] [N]\n");
+                isContinue = scan.next();
+                try {
+
+                    if (isContinue.equalsIgnoreCase("y")) {
+                        validInput = true;
+                    } else if (isContinue.equalsIgnoreCase("n")) {
+                        System.exit(0);
+                    } else {
+                        throw new Exception();
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Invalid Input.");
+                }
+            }
+        }
     }
 
     public static void showMenu() {
         System.out.printf("================================\n");
 
-        System.out.printf("|| %-1s || Show books list\n", 1);
+        System.out.printf("|| %-1s || Show available books list\n", 1);
         System.out.printf("|| %-1s || Show members list\n", 2);
         System.out.printf("|| %-1s || Add member\n", 3);
         System.out.printf("|| %-1s || Add book\n", 4);
@@ -70,32 +85,43 @@ public class Main extends Library {
         int pilihan = scan.nextInt();
         return pilihan;
     }
+    
 
-    // Ignore
-    public static void initializationDatabase() {
-        Book book1 = new Book();
-        book1.id = "1";
-        book1.name = "Budhi";
+    /********** OVERRIDE METHOD ************/
 
-        library.book.add(book1);
-    }
-
-    @Override // From class Library
+    @Override
     public void showMembers() {
         library.showMembers();
     }
 
-    @Override // From class Library
+    @Override
     public void showBooks() {
         library.showBooks();
     }
 
-    public void borrowBook() {
+    @Override
+    public void addBook() {
+        library.addBook();
     }
-    
+
+    @Override
+    public void addMember() {
+        library.addMember();
+    }
+
+    @Override
+    public void borrowBook() {
+        library.borrowBook();
+    }
+
+    @Override
+    public void returnBook() {
+        library.returnBook();
+    }
+
     public void borrowedBooks() {
         
-        System.out.println("1. Borrowed book(s) by particular member");
+        System.out.println("1. Borrowed books by particular member");
         System.out.println("2. All borrowed books list");
     
         System.out.print("\nInput : ");
@@ -103,14 +129,17 @@ public class Main extends Library {
     
         switch (selectedMenu) {
             case 1:
-                borrowedBooksByMember();
-                break;
+                library.showBorrowedBooksByMember();
+            break;
+
             case 2:
-                showBorrowedBooksList();
-                break;
+                library.showBorrowedBooksList();
+            break;
+
             default:
-                System.out.println("Wrong Input");
-                break;
+                System.out.println("Wrong Input. Please re-input.");
+                borrowedBooks();
+            break;
         }
 
     }
